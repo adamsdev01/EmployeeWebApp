@@ -1,0 +1,25 @@
+﻿@page "/Employees"
+
+<h3 style="text-align:center">Employees</h3>
+
+<QuickGrid Items="@itemsQueryable" Pagination="@pagination">
+    <PropertyColumn Property="@(e => e.Code)" Sortable="true" />
+    <PropertyColumn Property="@(e => e.FullName)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.StartingDate)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Dob)" Format="MM-dd-yyyy" Sortable="true" />
+</QuickGrid>
+
+@code {
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+    public Employee? employeeModel { get; set; }
+    public Employee newEmployee = new();
+    IQueryable<Employee>? itemsQueryable;
+
+    protected override async Task OnInitializedAsync()
+    {
+        itemsQueryable = _service.GetEmployees().AsQueryable();
+    }
+
+
+}

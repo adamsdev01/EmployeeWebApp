@@ -8,6 +8,7 @@ CRUD operations using EF Core 7 in Blazor Server
   - Net 7
   - EF Core 7
   - Bootstrap
+  - Blazor [QuickGrid](https://aspnet.github.io/quickgridsamples/)
 
 ## 💡 Features
 - CRUD

@@ -1,20 +1,43 @@
 ﻿@page "/Employees"
 
 <h3 style="text-align:center">Employees</h3>
-
-<QuickGrid Items="@itemsQueryable" Pagination="@pagination">
-    <PropertyColumn Property="@(e => e.Code)" Sortable="true" />
-    <PropertyColumn Property="@(e => e.FullName)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.StartingDate)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.Dob)" Format="MM-dd-yyyy" Sortable="true" />
-</QuickGrid>
+<br />
+<button class="btn btn-primary oi oi-plus" @onclick="() => employeeModal.Show()"> New</button>
+<br />
+<br />
+@if (itemsQueryable == null)
+{
+    <h3>
+        <em>No Records available...</em>
+    </h3>
+}
+else
+{
+    <QuickGrid Items="@itemsQueryable" Pagination="@pagination">
+        <PropertyColumn Property="@(e => e.Code)" Sortable="true" />
+        <PropertyColumn Property="@(e => e.FullName)" Title="Full Name" Sortable="true" />
+        <PropertyColumn Property="@(e => e.StartingDate)" Title="Start Date" Format="MM-dd-yyyy" Sortable="true" />
+        <PropertyColumn Property="@(e => e.Dob)" Title="Birth Date" Format="MM-dd-yyyy" Sortable="true" />
+       <TemplateColumn Title="Actions">
+            <button type="button" class="oi oi-pencil btn btn-success" @onclick="() => employeeModal.ShowEdit(itemsQueryable.Select(e => e.Id).First())"></button>
+            <button type="button" class="oi oi-trash btn btn-danger" @onclick="() => deleteEmployeeModal.Show(itemsQueryable.Select(e => e.Id).First())"></button>
+        </TemplateColumn>
+    </QuickGrid>
+    <EmployeeModal @ref="employeeModal"></EmployeeModal>
+    <DeleteEmployeeModal @ref="deleteEmployeeModal"></DeleteEmployeeModal>
+}
 
 @code {
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
 
+    [Parameter]
+    public int Id { get; set; }
     public Employee? employeeModel { get; set; }
     public Employee newEmployee = new();
     IQueryable<Employee>? itemsQueryable;
+
+    public EmployeeModal? employeeModal { get; set; }
+    public DeleteEmployeeModal? deleteEmployeeModal { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

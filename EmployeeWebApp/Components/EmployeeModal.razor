@@ -1,0 +1,185 @@
+﻿﻿@if (ShowDialog)
+{
+    <div class="modal fade show d-block" id="employeeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" id="employeeModalHeader">
+                    @if(newEmployee.Id == 0)
+                    {
+                        <h5 class="modal-title" id="titleLabel">Add Employee Record</h5>
+                    }
+                    else if(EmployeeId > 0)
+                    {
+                        <h5 class="modal-title" id="titleLabel">Edit Employee Record</h5>
+                    }
+                    <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@newEmployee" OnValidSubmit="@HandleValidSubmit">
+                        <br />
+                        <div class="row">
+                            @if(newEmployee.Id == 0)
+                            {
+                                <div class="col-md-6">
+                                    <label for="lastName">Employee Code</label>
+                                    <InputText class="form-control" @bind-Value="@newEmployee.Code"></InputText>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-6">
+                                    <label for="lastName">Employee Code</label>
+                                    <input readonly class="form-control" @bind-value="@newEmployee.Code">
+                                </div>
+                            }
+                            <div class="col-md-6">
+                                <label for="lastName">Start Date</label>
+                                <InputDate class="form-control" @bind-Value="@newEmployee.StartingDate" ></InputDate>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="lastName">First Name</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.FirstName"></InputText>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="lastName">Middle Name</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.MiddleName" ></InputText>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="lastName">Last Name</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.LastName" ></InputText>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="lastName">Date of Birth</label>
+                                <InputDate class="form-control" @bind-Value="@newEmployee.Dob"></InputDate>
+                            </div>              
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="lastName">Address</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.Address"></InputText>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lastName">City</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.City"></InputText>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="lastName">State</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.State" ></InputText>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lastName">Country</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.Country" ></InputText>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="lastName">Zip Code</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.PostalCode" ></InputText>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="lastName">Email Address</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.EmailAddress" ></InputText>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lastName">Phone Number</label>
+                                <InputText class="form-control" @bind-Value="@newEmployee.PhoneNo" ></InputText>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <button type="submit" class="oi oi-arrow-circle-bottom btn btn-primary"> Submit</button>
+                        <button type="button" class="oi oi-ban btn btn-warning" style="color:white;"  @onclick="@Close"> Cancel</button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    public bool ShowDialog { get; set; }
+
+    public int EmployeeId { get; set; }
+
+    public Employee newEmployee = new();
+
+    public Employee? employeeToEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> CloseEventCallback { get; set; }
+
+    protected override void  OnInitialized()
+    {
+
+    }
+
+    protected async Task HandleValidSubmit()
+    {
+        @if(newEmployee.Id == 0)
+        {
+            newEmployee.FullName = newEmployee.FirstName + " " + newEmployee.LastName;
+
+            _service.AddEmployee(newEmployee);
+            ShowDialog = false;
+            await CloseEventCallback.InvokeAsync(true);
+            StateHasChanged();           
+        }
+        else // edit
+        {
+            employeeToEdit = newEmployee;
+            _service.UpdateEmployeeDetails(employeeToEdit);
+            ShowDialog = false;
+            await CloseEventCallback.InvokeAsync(true);
+            StateHasChanged();
+        }
+
+    }
+
+    public void Show()
+    {
+        ResetDialog();
+        ShowDialog = true;
+        StateHasChanged();
+    }
+
+    public void ShowEdit(int employeeId)
+    {
+        ResetDialog();
+        ShowDialog = true;
+        StateHasChanged();
+
+        EmployeeId = employeeId;
+        employeeToEdit = _service.GetEmployeeData(EmployeeId);
+        newEmployee = employeeToEdit;
+    }
+
+    public void Close()
+    {
+        ShowDialog = false;
+        StateHasChanged();
+    }
+
+    private void ResetDialog()
+    {
+        newEmployee = new Employee { };
+    }
+
+}

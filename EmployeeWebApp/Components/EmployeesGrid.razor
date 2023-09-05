@@ -14,13 +14,16 @@
 else
 {
     <QuickGrid Items="@itemsQueryable" Pagination="@pagination">
+        <TemplateColumn Title="Profile" Align="Align.Center">
+            <img src="@(context.Thumbnail)" width="32" height="32" class="rounded-circle me-2">
+        </TemplateColumn>
         <PropertyColumn Property="@(e => e.Code)" Sortable="true" />
         <PropertyColumn Property="@(e => e.FullName)" Title="Full Name" Sortable="true" />
         <PropertyColumn Property="@(e => e.StartingDate)" Title="Start Date" Format="MM-dd-yyyy" Sortable="true" />
         <PropertyColumn Property="@(e => e.Dob)" Title="Birth Date" Format="MM-dd-yyyy" Sortable="true" />
-       <TemplateColumn Title="Actions">
-            <button type="button" class="oi oi-pencil btn btn-success" @onclick="() => employeeModal.ShowEdit(itemsQueryable.Select(e => e.Id).First())"></button>
-            <button type="button" class="oi oi-trash btn btn-danger" @onclick="() => deleteEmployeeModal.Show(itemsQueryable.Select(e => e.Id).First())"></button>
+        <TemplateColumn Title="Actions">
+            <button type="button" class="oi oi-pencil btn btn-success" @onclick="() => employeeModal.ShowEdit(context.Id)"></button>
+            <button type="button" class="oi oi-trash btn btn-danger" @onclick="() => deleteEmployeeModal.Show(context.Id)"></button>
         </TemplateColumn>
     </QuickGrid>
     <EmployeeModal @ref="employeeModal"></EmployeeModal>
@@ -43,6 +46,5 @@ else
     {
         itemsQueryable = _service.GetEmployees().AsQueryable();
     }
-
 
 }

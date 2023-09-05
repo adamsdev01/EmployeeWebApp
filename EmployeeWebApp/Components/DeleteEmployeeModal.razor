@@ -40,6 +40,7 @@
 
     protected override void OnInitialized()
     {
+        var empId = EmployeeId;
     }
 
     protected async Task HandleValidSubmit()
@@ -48,6 +49,7 @@
         ShowDialog = false;
         await CloseEventCallback.InvokeAsync(true);
         StateHasChanged();
+        _navManager.NavigateTo("/Employees", forceLoad: true);
     }
 
     public void Show(int employeeId)

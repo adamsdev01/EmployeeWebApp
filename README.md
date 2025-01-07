@@ -1,7 +1,9 @@
 # Employee Web App
 CRUD operations using EF Core 7 in Blazor Server
 #### This web app alllows a user to perform full CRUD.
-## Demo 
+## Demo Screenshot(s) 
+![screenshot](https://github.com/adamsdev01/EmployeeWebApp/blob/main/Screenshot%202025-01-06%20195012.png)
+
 
 ## 🧰 Tools
   - Blazor Server
@@ -15,5 +17,3 @@ CRUD operations using EF Core 7 in Blazor Server
 - CRUD
 - Image Upload
 - Error Logging
-
-## Example Screen

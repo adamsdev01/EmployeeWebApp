@@ -9,7 +9,11 @@ CRUD operations using EF Core 7 in Blazor Server
   - EF Core 7
   - Bootstrap
   - Blazor [QuickGrid](https://aspnet.github.io/quickgridsamples/)
+  - Serilog
 
 ## 💡 Features
 - CRUD
 - Image Upload
+- Error Logging
+
+## Example Screen
